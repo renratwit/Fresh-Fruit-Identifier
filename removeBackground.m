@@ -2,7 +2,7 @@ close all;
 clc;
 clear;
 
-I = imread("brown_azz_banana.jpg");
+I = imread("apple_spots.jpg");
 I_gray = rgb2gray(I);
 imshow(I);
 
@@ -18,8 +18,16 @@ b2 = drawrectangle(gca, 'Color', 'r');
 background = createMask(b1, I) + createMask(b2, I);
 
 BW = lazysnapping(I, L, foreground, background);
-imshow(labeloverlay(I, BW, 'Colormap', [0 1 0]));
 
 I_gray(BW==0) = 0;
 
-imshow(I_gray);
+figure; imshow(I_gray);
+
+I_edge = edge(I_gray, 'canny', 0.1);
+
+figure; imshow(I_edge);
+
+se = strel('disk', 5);
+I_edge = imclose(I_edge, se);
+I_edge = imfill(I_edge, 'holes');
+figure; imshow(I_edge);
