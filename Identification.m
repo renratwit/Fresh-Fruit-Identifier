@@ -1,7 +1,7 @@
 close all;
 clc;
 
-img = imread('apple_scab.jpg');
+img = imread('Image_Dataset/small_banana3.jpg');
 
 hsvImage = rgb2hsv(img);
 
