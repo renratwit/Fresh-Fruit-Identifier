@@ -1,7 +1,6 @@
-close all;
-clc;
-
-img = imread('Image_Dataset/small_banana3.jpg');
+function [image, count] = Identification(input)
+%img = imread('apple_scab.jpg');
+img = input;
 
 hsvImage = rgb2hsv(img);
 
@@ -12,8 +11,7 @@ hsvImage(:,:,3) = hsvImage(:,:,3) * 1.4;
 rgbImage = hsv2rgb(hsvImage);
 img = rgbImage;
 
-%figure 1
-figure; imshow(img);
+%figure; imshow(img);
 img = rgb2gray(img);
 
 img = medfilt2(img, [3 3]);
@@ -28,20 +26,15 @@ SE = strel('disk', 5);
 %BW = imdilate(BW, SE);
 BW = imdilate(BW, SE);
 
-%figure 2
-figure; imshow(BW);
+%figure; imshow(BW);
 
 BW = imfill(BW, 'holes');
 
 SE = strel('diamond', 3);
 
-BWdil = imerode(BW, SE);
 
-%figure 3
-figure; imshow(BW);
 
-numberOfTruePixels = sum(BW(:));
-disp(numberOfTruePixels);
+%figure; imshow(BW);
 
 
 SE = strel('diamond', 3);
@@ -54,36 +47,12 @@ BWerode = imopen(BWdil, SE);
 
 BW = imfill(BWerode, 'holes');
 
+BWerode = imdilate(BWdil, SE);
 
-
-%figure 4
-figure; imshow(BW);
+%figure; imshow(BW);
 numberOfTruePixels = sum(BW(:));
-disp(numberOfTruePixels);
+%disp(numberOfTruePixels);
 
-
-
-img = im2single(img);
-
-nColors = 3;
-% repeat the clustering 3 times to avoid local minima
-pixel_labels = imsegkmeans(img,nColors,'NumAttempts',10);
-%pixel_labels = imbinarize(pixel_labels, 0.4);
-
-figure; imshow(pixel_labels, []);
-
-
-
-
-se = offsetstrel('ball', 5, 5);
-dilatedI = imdilate(img, se);
-output = imsubtract(double(img), double(dilatedI));
-
-figure;
-subplot(121)
-imshow(img);
-subplot(122)
-imshow(output);
-
-
-
+image = BW;
+count = numberOfTruePixels;
+end
